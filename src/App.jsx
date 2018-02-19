@@ -8,15 +8,12 @@ class App extends Component {
 	//Initial state where props with initial users and message.
 	constructor(props) {
 		super(props);
-		this.state = {currentUser: 
-						{name: "Bob"}, 
-  						messages: [{
-					      username: "Bob",
-					      content: "Has anyone seen my marbles?",
-					    } , {
-					      username: "Anonymous",
-					      content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-					    }]
+		this.state = {
+			currentUser: {name: "Bob"}, 
+  			messages: [
+  			  {currentUser: "Bob",content: "Has anyone seen my marbles?"} , 
+  			  {currentUser: "Anonymous",content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."}
+  			]
 		}
 	}
 
@@ -29,8 +26,8 @@ class App extends Component {
       return (
 	    <div>
 		    <Nav />
-		    <MessageList this.state.messages />
-		    <ChatBar this.state.currentUser />
+		    <MessageList messages = {this.state.messages} />
+		    <ChatBar defaultValue = {this.state.currentUser.name} />
 		</div>
       );
     }
