@@ -39,31 +39,14 @@ class App extends Component {
 
   handleMessage = content => {
       const newMessage = {type: 'postMessage', username: content.currentUser, content: content.input};
+      if (content.currentUser !== this.state.currentUser.username) {
+        this.setState({currentUser: { name: content.currentUser }})
+      }
+
       this.socket.send(JSON.stringify(newMessage));
 	}
   
-  
-  // // When the component gets removed from the DOM, close the socket connection
-  // componentWillUnmount() {
-  //   this.socket.close();
-  // }
-  
 
-    // Old code for simulating a 3rd message: 
-
- //      console.log("componentDidMount <App />");
- //     setTimeout(() => {
- //       console.log("Simulating incoming message");
-    
- //       const newMessage = {key: 3, currentUser: "Michelle", content: "Hello there!"};
- //       const messages = this.state.messages.concat(newMessage)
-   
- //       this.setState({messages: messages})
- //     }, 3000);
-  // }
-
-    
-		    // <ChatBar defaultValue = {this.state.currentUser.name} />
     render() {
       return (
   	    <div>
