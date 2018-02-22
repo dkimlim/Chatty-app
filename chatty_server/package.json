@@ -1,0 +1,16 @@
+{
+  "name": "chatty_server",
+  "version": "1.0.0",
+  "description": "WebSocket server for app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Diane KL",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.16.2",
+    "uuid-v4": "^0.1.0",
+    "ws": "4.0.0"
+  }
+}

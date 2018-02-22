@@ -8,59 +8,70 @@ class App extends Component {
 	//Initial state where props with initial users and message.
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			currentUser: {name: "Bob"}, 
-			messages: [
-			  {currentUser: "Bob", 
-        content: "Has anyone seen my marbles?", 
-        key: 1}, 
-			  {currentUser: "Anonymous", 
-        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.", 
-        key: 2}
-			]
-		}
-	}
+    this.socket = new WebSocket('ws://localhost:3001');
+    // this.newMessage = this.newMessage.bind(this);
+    this.state = {
+      currentUser: {name: "Anonymous"}, 
+      messages: []
+    };
+  }
 
     // Called after the component was rendered and it was attached to the
-    // DOM. This is a good place to make AJAX requests or setTimeout.
+    // DOM. 
   componentDidMount() {
-      console.log("componentDidMount <App />");
-  		setTimeout(() => {
-    		console.log("Simulating incoming message");
-    
-    		const newMessage = {key: 3, currentUser: "Michelle", content: "Hello there!"};
-    		const messages = this.state.messages.concat(newMessage)
-   
-    		this.setState({messages: messages})
-  	  }, 3000);
-	}
+
+    this.socket.onopen = e => {
+      console.log('Connected to WebSocket server');
+    };
+    // handle receiving a message from the websocket server
+    // e is a `MessageEvent` object
+    this.socket.onmessage = e => {
+      console.log("received message", e);
+      
+      // Parse the message data into a JavaScript object using JSON.parse()
+      let newMessage = JSON.parse(e.data);
+      // concat the message to the list of messages in our state
+      const messages = this.state.messages.concat(newMessage);
+      this.setState({ messages: messages });
+      }
+  }
 
 
   handleMessage = content => {
-      console.log("HIDHOAD", this.state);
-      const newMessage = {
-          type: 'message',
-          currentUser: this.state.currentUser.name,
-          content: content
-          // key:
-      }
-
-
-	    let messages = this.state.messages
-	    messages.push(newMessage)
-	    this.setState({messages: messages})
+      const newMessage = {type: 'postMessage', username: content.currentUser, content: content.input};
+      this.socket.send(JSON.stringify(newMessage));
 	}
+  
+  
+  // // When the component gets removed from the DOM, close the socket connection
+  // componentWillUnmount() {
+  //   this.socket.close();
+  // }
+  
+
+    // Old code for simulating a 3rd message: 
+
+ //      console.log("componentDidMount <App />");
+ //     setTimeout(() => {
+ //       console.log("Simulating incoming message");
+    
+ //       const newMessage = {key: 3, currentUser: "Michelle", content: "Hello there!"};
+ //       const messages = this.state.messages.concat(newMessage)
+   
+ //       this.setState({messages: messages})
+ //     }, 3000);
+  // }
+
     
 		    // <ChatBar defaultValue = {this.state.currentUser.name} />
     render() {
       return (
-	    <div>
-		    <Nav />
-		    <MessageList messages = {this.state.messages} />
-		    <ChatBar currentUser = {this.state.currentUser.name} handleMessage={this.handleMessage} />
-		</div>
-      )
+  	    <div>
+  		    <Nav />
+  		    <MessageList messages = {this.state.messages} />
+  		    <ChatBar defaultValue = {this.state.currentUser.name} handleMessage={this.handleMessage} />
+  		  </div>
+      );
     }
 }
 export default App;
