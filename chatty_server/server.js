@@ -13,23 +13,23 @@ const server = express()
 
 const wss = new SocketServer({ server });
 
-	// Setup a broadcast helper
-	wss.broadcast = function broadcast(newMessage) {
-	  wss.clients.forEach(function each(client) {
-	    // only send the message to clients which are OPEN
-	    if (client.readyState === WebSocket.OPEN) {
-	      client.send(newMessage);
-	    }
-	  });
-	};
+// Setup a broadcast helper
+wss.broadcast = function broadcast(newMessage) {
+  wss.clients.forEach(function each(client) {
+    // only send the message to clients which are OPEN
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(newMessage);
+    }
+  });
+};
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
   counter += 1;
-  console.log(counter);
-  wss.broadcast(JSON.stringify({type: "Client connected", count: counter}));
+  wss.broadcast(JSON.stringify({type: "connectedUsers", count: counter}));
   //Server handles incoming messages and user changes with notifications. 
   //This also creates a unique key for each user usind the UUID module.
   ws.on('message', function incoming(message) {
@@ -50,8 +50,7 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
   	console.log('Client disconnected')
   	counter -= 1;
-  	console.log(counter);
-  	wss.broadcast(JSON.stringify({type: "Client disconnected", count: counter}));
+  	wss.broadcast(JSON.stringify({type: "clientDisconnected", count: counter}));
   });
 });
 
