@@ -36,17 +36,19 @@ class App extends Component {
       }
   }
 
-
+  //helper to handle any text input in the ChatBar or when user changes their name.
   handleMessage = content => {
       const newMessage = {type: 'postMessage', username: content.currentUser, content: content.input};
       if (content.currentUser !== this.state.currentUser.username) {
         this.setState({currentUser: { name: content.currentUser }})
+        const newNotification = {type: 'postNotification', content: `${this.state.currentUser.name} has changed their name to ${content.currentUser}.`}
+        this.socket.send(JSON.stringify(newNotification))
       }
 
       this.socket.send(JSON.stringify(newMessage));
 	}
   
-
+    // Called any time the props or state changes. The JSX elements returned in this method will be rendered to the DOM.
     render() {
       return (
   	    <div>

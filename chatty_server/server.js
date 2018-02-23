@@ -17,9 +17,17 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  //Server handles incoming messages and user changes with notifications. 
+  //This also creates a unique key for each user usind the UUID module.
   ws.on('message', function incoming(message) {
   let newMessage = JSON.parse(message);
   newMessage.key = uuidv4();
+
+  if(newMessage.type ==="postMessage"){
+  	newMessage.type === "incomingMessage"
+  } else if (newMessage.type === "postNotification") {
+  	newMessage.type === "incomingNotification"
+  }
   
 
 	// Setup a broadcast helper
@@ -43,23 +51,9 @@ wss.on('connection', (ws) => {
   // })
 
   // Send an initial message to clients on connection.
-  ws.send(JSON.stringify({ username: "WelcomeBot", message: "Welcome to the Chatty room :)" }));
+  ws.send(JSON.stringify({ username: "Bot", message: "Welcome to the Chatty room :)" }));
 
 //   ws.on('close', () => console.log('Client disconnected'));
 });
 
 
-// // Handle new clients connecting
-// wss.on("connection", function connection(ws) {
-//   ws.on("message", function incoming(message) {
-//     console.log("received: %s", message);
-
-
-//   // error handler for clients
-//   ws.on("error", e => {
-//     console.log("got an error", e);
-//   });
-
-//   // Send an initial message to clients on connection.
-//   ws.send(JSON.stringify({ username: "Server", message: "something" }));
-// });

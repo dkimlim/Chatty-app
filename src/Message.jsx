@@ -10,6 +10,7 @@ export default class Message extends Component {
 	   	      <span className="message-username">{username}</span>
 		      <span className="message-content">{content}</span>
 			</div>}
+			{type === 'postNotification' && <div className="message system">{content}</div>}
 		  </div>
     	);
   	}
