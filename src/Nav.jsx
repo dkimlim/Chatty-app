@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-export default function Nav() {
+export default class Nav extends Component {
+	render() {
 	return (
 		<nav className="navbar">
 		      <a href="/" className="navbar-brand">Chatty</a>
+		      <span className="userCount">{this.props.connectedUsers} users online</span>
 		</nav>
-	)
+	)}
 }

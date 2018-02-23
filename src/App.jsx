@@ -12,7 +12,8 @@ class App extends Component {
     // this.newMessage = this.newMessage.bind(this);
     this.state = {
       currentUser: {name: "Anonymous"}, 
-      messages: []
+      messages: [],
+      userCount: 0
     };
   }
 
@@ -20,29 +21,34 @@ class App extends Component {
     // DOM. 
   componentDidMount() {
 
-    this.socket.onopen = e => {
+    this.socket.onopen = function(e) {
       console.log('Connected to WebSocket server');
     };
     // handle receiving a message from the websocket server
     // e is a `MessageEvent` object
-    this.socket.onmessage = e => {
-      console.log("received message", e);
-      
-      // Parse the message data into a JavaScript object using JSON.parse()
-      let newMessage = JSON.parse(e.data);
-      // concat the message to the list of messages in our state
+    this.socket.onmessage = function(e) {
+      debugger
+      const newMessage = JSON.parse(e.data);
       const messages = this.state.messages.concat(newMessage);
-      this.setState({ messages: messages });
+      
+      if ( messages[0].type === 'connectedUsers' ) {
+        this.setState({ userCount : messages[0].count })
+      } else {
+        this.setState({messages: messages});
       }
+    }.bind(this)
   }
+
 
   //helper to handle any text input in the ChatBar or when user changes their name.
   handleMessage = content => {
       const newMessage = {type: 'postMessage', username: content.currentUser, content: content.input};
-      if (content.currentUser !== this.state.currentUser.username) {
-        this.setState({currentUser: { name: content.currentUser }})
+
+      if (content.currentUser !== this.state.currentUser.name) {
         const newNotification = {type: 'postNotification', content: `${this.state.currentUser.name} has changed their name to ${content.currentUser}.`}
+      
         this.socket.send(JSON.stringify(newNotification))
+        this.setState({currentUser: { name: content.currentUser }})
       }
 
       this.socket.send(JSON.stringify(newMessage));
@@ -52,7 +58,7 @@ class App extends Component {
     render() {
       return (
   	    <div>
-  		    <Nav />
+  		    <Nav connectedUsers={this.state.userCount} />
   		    <MessageList messages = {this.state.messages} />
   		    <ChatBar defaultValue = {this.state.currentUser.name} handleMessage={this.handleMessage} />
   		  </div>

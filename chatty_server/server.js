@@ -17,8 +17,9 @@ const wss = new SocketServer({ server });
 wss.broadcast = function broadcast(newMessage) {
   wss.clients.forEach(function each(client) {
     // only send the message to clients which are OPEN
+   
     if (client.readyState === WebSocket.OPEN) {
-      client.send(newMessage);
+      client.send(JSON.stringify(newMessage));
     }
   });
 };
@@ -29,7 +30,7 @@ wss.broadcast = function broadcast(newMessage) {
 wss.on('connection', (ws) => {
   console.log('Client connected');
   counter += 1;
-  wss.broadcast(JSON.stringify({type: "connectedUsers", count: counter}));
+  wss.broadcast({type: "connectedUsers", count: counter, key: uuidv4()});
   //Server handles incoming messages and user changes with notifications. 
   //This also creates a unique key for each user usind the UUID module.
   ws.on('message', function incoming(message) {
@@ -43,14 +44,21 @@ wss.on('connection', (ws) => {
   }
 
     // When we get a message from a client, re-broadcast it to all connected clients
-    wss.broadcast(JSON.stringify(newMessage));
+    wss.broadcast(newMessage);
+    wss.broadcast(counter);
   });
+
+  // // //Everytime a user connects, we send a notifcation to display how many users are connected.
+  // let usersOnline = {type: 'incomingNotification', content:`Anonymous user connected! ${counter} user(s) online.`, key: uuidv4()}
+  //   wss.broadcast(usersOnline);
   
 
   ws.on('close', () => {
   	console.log('Client disconnected')
   	counter -= 1;
-  	wss.broadcast(JSON.stringify({type: "clientDisconnected", count: counter}));
+  	// let usersOnline = {type: 'incomingNotification', content:`User ${ws.username} disconnected. ${counter} user(s) online.`, key: uuidv4()}
+  	wss.broadcast({type: "connectedUsers", count: counter, key: uuidv4()});
+  	// wss.broadcast(counter);
   });
 });
 
