@@ -18,6 +18,10 @@ Clone this repository and install all the dependencies through the `npm install`
 ```
 
 
+### Screenshot
+
+!["Screenshot of chatroom"](https://github.com/dkimlim/Chatty-app/blob/master/docs/chatroom.png?raw=true)
+
 ### Dependencies
 
 * React
