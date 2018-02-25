@@ -2,14 +2,13 @@
 body {
   background: white;
   color: black;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+  
+  
   margin: 70px 0;
 }
 
 .chatbar {
-  background: tomato;
-  border-top: 1px solid black;
+  background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
   bottom: 0;
   display: flex;
   left: 0;
@@ -20,12 +19,13 @@ body {
 
 .chatbar-message,
 .chatbar-username {
-  border: 1px solid black;
+  border: white;
   display: block;
   height: 40px;
   line-height: 40px;
   margin: 5px;
   padding: 0 9px;
+  font-family: 'Noto Serif', serif;
 }
 
 .chatbar-message {
@@ -55,16 +55,24 @@ body {
 
 .message-content {
   flex: 8;
+  font-size: 16px;
+  font-family: 'Noto Serif', serif;
+
+
 }
 
 .message-username {
   flex: 2;
-  font-weight: 700;
+  /*font-weight: 700;*/
+  font-size: 16px;
+  font-family: 'Noto Serif', serif;
+
+
 }
 
 .navbar {
-  background: tomato;
-  border-bottom: 1px solid black;
+  background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+  /*border-bottom: 1px solid yellow;*/
   height: 60px;
   left: 0;
   padding: 0 10px;
@@ -74,13 +82,25 @@ body {
 }
 
 .navbar-brand {
-  color: inherit;
+  color: white;
   display: block;
   float: left;
   font-weight: 700;
   font-size: 28px;
+  font-style: italic;
+  font-family: 'Noto Serif', serif;
   height: 60px;
   line-height: 60px;
   padding: 0 10px;
   text-decoration: none;
+}
+
+.userCount {
+  color: white;
+  float: right;
+  padding: 10px 10px 0 0;
+  font-size: 16px;
+  font-family: 'Noto Serif', serif;
+  font-style: italic;
+  font-weight: 700;
 }
