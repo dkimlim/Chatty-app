@@ -5,9 +5,9 @@ import Nav from './Nav.jsx';
 
 class App extends Component {
 
-	//Initial state where props with initial users and message.
-	constructor(props) {
-		super(props);
+  //Initial state where props with initial users and message.
+  constructor(props) {
+    super(props);
     this.socket = new WebSocket('ws://localhost:3001');
     this.state = {
       currentUser: {name: "Anonymous"}, 
@@ -25,6 +25,7 @@ class App extends Component {
 
     // handles receiving a message from the websocket server
     this.socket.onmessage = function(e) {
+      
       const newMessage = JSON.parse(e.data);
       const messages = this.state.messages.concat(newMessage);
       
@@ -48,20 +49,21 @@ class App extends Component {
         const newNotification = {type: 'postNotification', content: `${this.state.currentUser.name} has changed their name to ${content.currentUser}.`}
         this.setState( {currentUser: { name: content.currentUser }} )
         this.socket.send( JSON.stringify(newNotification) )
+      } else {
+        this.setState( {currentUser: { name: content.currentUser }} )
       }
       this.socket.send(JSON.stringify(newMessage));
-	}
+  }
   
   // Called any time the props or state changes. The JSX elements returned in this method will be rendered to the DOM.
   render() {
     return (
-	    <div>
-		    <Nav connectedUsers={this.state.userCount} />
-		    <MessageList messages = {this.state.messages} />
-		    <ChatBar defaultValue = {this.state.currentUser.name} handleMessage={this.handleMessage} />
-		  </div>
+      <div>
+        <Nav connectedUsers={this.state.userCount} />
+        <MessageList messages = {this.state.messages} />
+        <ChatBar defaultValue = {this.state.currentUser.name} handleMessage={this.handleMessage} />
+      </div>
     );
   }
 }
 export default App;
-

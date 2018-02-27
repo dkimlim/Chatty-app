@@ -5,7 +5,7 @@ export default class Nav extends Component {
 	return (
 		<nav className="navbar">
 		      <a href="/" className="navbar-brand">Chatty</a>
-		      <span className="userCount">{this.props.connectedUsers} users online</span>
+		      <span className="userCount">{this.props.connectedUsers} user(s) online</span>
 		</nav>
 	)}
 }
